@@ -6,6 +6,7 @@ use App\Http\Controllers\JudgmentController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\ConsentController;
 use App\Http\Controllers\ConfirmationController;
+use App\Http\Controllers\RetirementController;
 
 Route::get('/', [JudgmentController::class, 'show']);
 
@@ -25,7 +26,16 @@ Route::get('/consent/confirm', [ConsentController::class, 'confirm'])->name('con
 // 確認画面
 Route::get('/confirmation', [ConfirmationController::class, 'show'])->name('confirmation.show');
 Route::post('/confirmation', [ConfirmationController::class, 'submit'])->name('confirmation.submit');
-Route::post('/submit-final', [ConfirmationController::class, 'submitFinal'])->name('confirmation.submitFinal');
+
+//サンキューページ
+Route::get('/thank-you', function () {
+    return view('thank_you');
+})->name('thank_you');
+
+
+// 退職通知の送信
+Route::post('/confirmation/submitFinal', [RetirementController::class, 'submitFinal'])->name('confirmation.submitFinal');
+
 
 // 拒否ページ
 Route::get('/denied', function () {

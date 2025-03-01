@@ -111,5 +111,7 @@
             <button type="submit" class="btn btn-primary">送信</button>
         </div>
     </form>
+
+
     </div>
 @endsection
