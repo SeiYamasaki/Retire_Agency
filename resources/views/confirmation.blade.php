@@ -81,8 +81,8 @@
             <p>在職中は格別のご厚情を賜り、誠にありがとうございました。</p>
             <p>貴社のますますのご発展をお祈り申し上げます。</p>
 
-            <!-- 敬具を右寄せ -->
-            <p class="text-right font-weight-bold" style="text-align: right;">敬具</p>
+            <!-- 草々を右寄せ -->
+            <p class="text-right font-weight-bold" style="text-align: right;">草々</p>
 
             <!-- 記・自動生成・以上を中央寄せ -->
             <p class="text-center font-weight-bold" style="text-align: center;">記</p>
