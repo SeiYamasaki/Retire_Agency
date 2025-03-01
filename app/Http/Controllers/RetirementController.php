@@ -19,7 +19,7 @@ class RetirementController extends Controller
         Log::info('✅ submitFinal メソッドが実行されました');
 
         // ✅ **セッションデータを次のリクエストでも維持**
-        session()->reflash(); 
+        session()->reflash();
 
         try {
             // ✅ **セッションデータを取得**
@@ -44,10 +44,25 @@ class RetirementController extends Controller
             $pdfPath = $pdfDir . '/retirement_notice_' . time() . '.pdf';
             Log::info("✅ PDF パス: " . $pdfPath);
 
-            // ✅ **mPDF インスタンス作成**
+            // ✅ **mPDF インスタンス作成（日本語フォント設定）**
             $mpdf = new Mpdf([
-                'tempDir' => storage_path('app/mpdf') // 一時フォルダを指定
+                'tempDir'    => storage_path('app/mpdf'), // 一時フォルダを指定
+                'mode'       => 'ja', // 日本語モード
+                'format'     => 'A4',
+                'default_font' => 'ipaexg', // デフォルトの日本語フォント
+                'fontDir'    => array_merge(
+                    (new \Mpdf\Config\ConfigVariables())->getDefaults()['fontDir'],
+                    [storage_path('fonts')]
+                ),
+                'fontdata'   => (new \Mpdf\Config\FontVariables())->getDefaults()['fontdata'] + [
+                    'ipaexg' => ['R' => 'ipaexg.ttf', 'B' => 'ipaexg.ttf'], // IPAexゴシック
+                    'ipaexm' => ['R' => 'ipaexm.ttf', 'B' => 'ipaexm.ttf']  // IPAex明朝
+                ],
             ]);
+
+            // ✅ **日本語フォントを明示的にセット**フォントを明朝 mpdf->SetFont('ipaexm');
+
+            $mpdf->SetFont('ipaexg');
 
             // ✅ **ビューのデータを安全に取得**
             $pdfData = [
@@ -61,8 +76,17 @@ class RetirementController extends Controller
                 'account_holder'     => $formData['form']['account_holder'] ?? '未入力',
             ];
 
+            // ✅ **CSS を適用し、フォントを明示的に設定**
+            $css = '<style>
+                body { font-family: ipaexg; }
+                p, h1, h2, h3, h4, h5, h6, ul, li { font-family: ipaexg; }
+            </style>';
+
+            // ✅ **HTML を UTF-8 に変換**
+            $html = $css . view('pdf.retirement_letter', ['formData' => $pdfData])->render();
+            $html = mb_convert_encoding($html, 'UTF-8', 'UTF-8');
+
             // ✅ **PDF 作成**
-            $html = view('pdf.retirement_letter', ['formData' => $pdfData])->render();
             $mpdf->WriteHTML($html);
             $mpdf->Output($pdfPath, \Mpdf\Output\Destination::FILE);
 
@@ -75,11 +99,16 @@ class RetirementController extends Controller
             Log::info('✅ PDF 生成成功');
 
             // ✉ **2. メール送信**
-            Mail::to($recipientEmail)->send(new RetireNotificationMail($pdfData, $pdfPath));
-
-            Log::info('✅ メール送信成功');
+            try {
+                Mail::to($recipientEmail)->send(new RetireNotificationMail($pdfData, $pdfPath));
+                Log::info('✅ メール送信成功');
+            } catch (\Exception $e) {
+                Log::error('❌ メール送信エラー: ' . $e->getMessage());
+                return redirect()->route('thank_you')->with('error', 'メール送信に失敗しました。');
+            }
 
             return redirect()->route('thank_you')->with('success', '退職通知を送信しました！');
+
         } catch (\Exception $e) {
             Log::error('❌ 退職通知メール送信エラー: ' . $e->getMessage());
             return redirect()->route('thank_you')->with('error', 'メール送信に失敗しました。');

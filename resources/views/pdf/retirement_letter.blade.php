@@ -5,14 +5,17 @@
     <meta charset="UTF-8">
     <title>退職届</title>
     <style>
+        /* ✅ mPDF に適用可能なフォントを指定 */
         body {
-            font-family: "Meiryo", sans-serif;
+            font-family: "ipaexg", sans-serif;
         }
 
         .title {
             text-align: center;
             font-size: 24px;
             font-weight: bold;
+            font-family: "ipaexg", sans-serif;
+            /* ✅ タイトルにフォントを明示的に指定 */
         }
 
         .content {
@@ -22,7 +25,7 @@
 </head>
 
 <body>
-    <div class="title">退職届</div>
+    <div class="title">退職届</div> <!-- ✅ タイトルにフォントが適用されるように修正 -->
 
     <p>日付: {{ now()->format('Y年m月d日') }}</p>
     <p>会社名: {{ $formData['company_name'] }}</p>
@@ -35,9 +38,8 @@
         <li>銀行名: {{ $formData['bank_name'] ?? '未入力' }}</li>
         <li>口座種別: {{ $formData['account_type'] ?? '未入力' }}</li>
         <li>口座番号: {{ $formData['account_number'] ?? '未入力' }}</li>
-        <li>口座名義: {{ $formData['account_holder'] ?? '未入力' }}</li> <!-- ここを修正 -->
+        <li>口座名義: {{ $formData['account_holder'] ?? '未入力' }}</li>
     </ul>
-
 
     <p>以上</p>
 </body>
