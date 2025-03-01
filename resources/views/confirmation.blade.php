@@ -35,32 +35,43 @@
         </p>
 
         {{-- 送達文 --}}
-        <h3 class="text-info mt-5">送達文</h3>
+        <h3 class="text-info mt-5">送達文編</h3>
         <div class="border p-3">
             <p>{{ session('form.company_name') }}</p>
             <p>{{ session('form.resignation_contact') }}様</p>
             <p>前略</p>
+            <br>
             <p>退職代行モーアカン®と申します｡</p>
             <p>この度は，御社に勤務中の{{ session('form.name') }}様よりご依頼を受けてご連絡を差し上げました｡</p>
             <p>添付ファイルの退職届の通り御社へ御伝達申し上げます｡</p>
             <p>なお，今後の{{ session('form.name') }}様のご連絡につきましては，下記のポータルよりご連絡を承っておりますので，必要であればご利用ください｡</p>
             <p>利用に関する情報につきましては､改めて別途ご案内申し上げます｡</p>
-            <p>草々</p>
-            <p>記</p>
-            <p><a href="http://localhost/login">http://localhost/login</a></p>
+            <p class="text-right font-weight-bold" style="text-align: right;">草々</p>
+            <p class="text-center font-weight-bold" style="text-align: center;">記</p>
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="http://localhost/login"
+                    style="font-size: 20px; text-decoration: none; color: blue; display: block; margin-bottom: 20px;">
+                    http://localhost/login
+                </a>
+                <img src="{{ asset('images/login.png') }}" alt="中央配置の画像" style="width: 300px; height: auto;">
+            </div>
             <p>以上</p>
         </div>
 
         {{-- 退職届 --}}
-        <h3 class="text-danger mt-5">退職届</h3>
+        <h3 class="text-danger mt-5">退職届編</h3>
         <div class="border p-3">
             <p>{{ now()->format('Y年m月d日') }}</p>
             <p>{{ session('form.company_name') }}</p>
             <p>{{ session('form.resignation_contact') }}様</p>
+            <br>
+            <br>
             <h4 class="text-center">退 職 届</h4>
             <p class="text-right" style="text-align: right;">{{ session('form.prefecture') }}</p>
             <p class="text-right" style="text-align: right;">{{ session('form.address') }}</p>
             <p class="text-right" style="text-align: right;">{{ session('form.name') }}</p>
+            <br>
+            <br>
 
             <p>前略</p>
             <p>私、{{ session('form.name') }}は一身上の都合により、{{ session('form.desired_resignation_date') }}をもちまして退職いたしたく、ここに届出いたします｡
@@ -75,15 +86,17 @@
 
             <!-- 記・自動生成・以上を中央寄せ -->
             <p class="text-center font-weight-bold" style="text-align: center;">記</p>
-            <p class="text-center font-weight-bold" style="text-align: center;">銀行名支店名: {{ session('form.bank_name') }}</p>
-            <p class="text-center font-weight-bold" style="text-align: center;">口座種類: {{ session('form.account_type') }}
+            <p class="text-center font-weight-bold" style="text-align: center;"> {{ session('form.bank_name') }}</p>
+            <p class="text-center font-weight-bold" style="text-align: center;"> {{ session('form.account_type') }}
             </p>
-            <p class="text-center font-weight-bold" style="text-align: center;">口座番号: {{ session('form.account_number') }}
+            <p class="text-center font-weight-bold" style="text-align: center;"> {{ session('form.account_number') }}
             </p>
-            <p class="text-center font-weight-bold" style="text-align: center;">口座名義: {{ session('form.account_holder') }}
+            <p class="text-center font-weight-bold" style="text-align: center;"> {{ session('form.account_holder') }}
+            </p>
+            <p class="text-center font-weight-bold" style="text-align: center;"> {{ session('form.name') }}
             </p>
 
-            <p class="text-center font-weight-bold" style="text-align: right;">以上</p>
+            <p class="text-right font-weight-bold" style="text-align: right;">以上</p>
         </div>
 
 
