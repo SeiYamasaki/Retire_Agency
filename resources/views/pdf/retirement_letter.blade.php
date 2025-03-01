@@ -5,43 +5,74 @@
     <meta charset="UTF-8">
     <title>退職届</title>
     <style>
-        /* ✅ mPDF に適用可能なフォントを指定 */
         body {
             font-family: "ipaexg", sans-serif;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .border {
+            border: 1px solid black;
+            padding: 20px;
         }
 
         .title {
             text-align: center;
             font-size: 24px;
             font-weight: bold;
-            font-family: "ipaexg", sans-serif;
-            /* ✅ タイトルにフォントを明示的に指定 */
         }
 
-        .content {
-            margin-top: 20px;
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+        h4 {
+            font-size: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <div class="title">退職届</div> <!-- ✅ タイトルにフォントが適用されるように修正 -->
+    <div class="border">
+        <p>{{ now()->format('Y年m月d日') }}</p>
+        <p>{{ session('form.company_name') }}</p>
+        <p>{{ session('form.resignation_contact') }}様</p>
 
-    <p>日付: {{ now()->format('Y年m月d日') }}</p>
-    <p>会社名: {{ $formData['company_name'] }}</p>
-    <p>担当者様: {{ $formData['resignation_contact'] }}</p>
+        <h4 class="title">退 職 届</h4>
 
-    <p>私、{{ $formData['name'] }} は、一身上の都合により、{{ $formData['desired_resignation_date'] }} をもちまして退職いたします。</p>
+        <p class="text-right">{{ session('form.prefecture') }}</p>
+        <p class="text-right">{{ session('form.address') }}</p>
+        <p class="text-right">{{ session('form.name') }}</p>
 
-    <p>給与の振込先:</p>
-    <ul>
-        <li>銀行名: {{ $formData['bank_name'] ?? '未入力' }}</li>
-        <li>口座種別: {{ $formData['account_type'] ?? '未入力' }}</li>
-        <li>口座番号: {{ $formData['account_number'] ?? '未入力' }}</li>
-        <li>口座名義: {{ $formData['account_holder'] ?? '未入力' }}</li>
-    </ul>
+        <p>前略</p>
+        <p>私、{{ session('form.name') }}
+            は一身上の都合により、{{ \Carbon\Carbon::parse(session('form.desired_resignation_date'))->format('Y年m月d日') }}
+            をもちまして退職いたしたく、ここに届出いたします。</p>
+        <p>なお、「離職票」及び「給与所得者の源泉徴収票」並びに「社会保険資格喪失証明書」のご依頼をいたしますので、上記私の住所宛てにお手配のほどよろしくお願いいたします。</p>
+        <p>併せて、未払給与がある場合になりますが､振込先は以下の通りですのでお振込の程よろしくお願い申し上げます。</p>
+        <p>在職中は格別のご厚情を賜り、誠にありがとうございました。</p>
+        <p>貴社のますますのご発展をお祈り申し上げます。</p>
 
-    <p>以上</p>
+        <p class="text-right font-weight-bold">草々</p>
+
+        <p class="text-center font-weight-bold">記</p>
+        <p class="text-center font-weight-bold">{{ session('form.bank_name') }}</p>
+        <p class="text-center font-weight-bold">{{ session('form.account_type') }}</p>
+        <p class="text-center font-weight-bold">{{ session('form.account_number') }}</p>
+        <p class="text-center font-weight-bold">{{ session('form.account_holder') }}</p>
+        <p class="text-center font-weight-bold">{{ session('form.name') }}</p>
+
+        <p class="text-right font-weight-bold">以上</p>
+    </div>
 </body>
 
 </html>
