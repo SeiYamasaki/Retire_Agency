@@ -312,6 +312,39 @@
 
             <h4 class="section-file">ファイルアップロード</h4>
 
+            <!-- 雇用契約書 -->
+            <div class="mb-3">
+                <label for="employment_contract" class="form-label">
+                    あなたの雇用契約書または労働条件通知書（撮影可）※必須
+                </label>
+
+                <!-- ファイル選択 (複数ファイル対応) -->
+                <input type="file" class="form-control file-input" id="employment_contract"
+                    name="employment_contract[]" accept="image/*" multiple
+                    onchange="previewFiles(event, 'preview_employment_contract', 'reset_employment_contract')">
+
+                <!-- カメラを起動するボタン -->
+                <button type="button" class="btn btn-secondary mt-2" id="start_employment_contract"
+                    onclick="startCamera('employment_contract')">📷 カメラを起動</button>
+
+                <!-- カメラ表示 -->
+                <div class="camera-container" id="cameraContainer_employment_contract" style="display: none;">
+                    <video id="cameraView_employment_contract" autoplay playsinline></video>
+                </div>
+
+                <!-- 撮影ボタン -->
+                <button type="button" class="btn btn-primary mt-2" id="capture_employment_contract"
+                    style="display:none;" onclick="captureImage('employment_contract')">📸 撮影</button>
+
+                <!-- プレビューエリア（複数画像対応） -->
+                <div id="preview_employment_contract" class="preview-container"
+                    style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"></div>
+
+                <!-- やり直すボタン -->
+                <button type="button" class="btn btn-danger mt-2 reset-btn" id="reset_employment_contract"
+                    style="display:none;" onclick="resetImages('employment_contract')">🔄 やり直す</button>
+            </div>
+
             <!-- 身分証明書 -->
             <div class="mb-3">
                 <label for="id_proof" class="form-label">
@@ -366,18 +399,14 @@
                             reader.onload = function(e) {
                                 let img = document.createElement('img');
                                 img.src = e.target.result;
-                                img.style.maxWidth = '100px';
-                                img.style.height = 'auto';
-                                img.style.border = "1px solid #ccc";
-                                img.style.borderRadius = "5px";
-                                img.style.marginRight = "5px";
+                                img.classList.add("preview-img"); // CSS で統一
                                 previewContainer.appendChild(img);
                             };
                             reader.readAsDataURL(file);
                         }
                     });
 
-                    // **更新したファイルリストを `input.files` に適用**
+                    // **`input.files` を確実に更新**
                     input.files = dataTransfer.files;
 
                     // **画像が追加されたら「やり直す」ボタンを表示**
@@ -429,11 +458,7 @@
 
                     let img = document.createElement('img');
                     img.src = canvas.toDataURL('image/png');
-                    img.style.maxWidth = "100px";
-                    img.style.height = "auto";
-                    img.style.border = "1px solid #ccc";
-                    img.style.borderRadius = "5px";
-                    img.style.marginRight = "5px";
+                    img.classList.add("preview-img");
                     previewContainer.appendChild(img);
 
                     // **撮影した画像を `input.files` に追加**
@@ -454,20 +479,11 @@
                 // 🔄 撮影・アップロード画像をリセット（プレビューのみクリア、ファイルリストは保持）
                 function resetImages(target) {
                     const previewContainer = document.getElementById(`preview_${target}`);
-                    const fileInput = document.getElementById(target);
                     const resetButton = document.getElementById(`reset_${target}`);
                     const captureButton = document.getElementById(`capture_${target}`);
-                    const dataTransfer = new DataTransfer();
-
-                    // **現在の `input.files` を保持**
-                    for (let i = 0; i < fileInput.files.length; i++) {
-                        dataTransfer.items.add(fileInput.files[i]);
-                    }
 
                     // **プレビューエリアのみクリア**
                     previewContainer.innerHTML = '';
-
-                    fileInput.files = dataTransfer.files;
 
                     resetButton.style.display = "none";
                     captureButton.style.display = "block"; // 撮影ボタンを再表示
@@ -484,6 +500,18 @@
                     });
                 }
             </script>
+            <style>
+                .preview-img {
+                    max-width: 600px;
+                    /* プレビュー画像を大きく */
+                    height: 600px;
+                    border: 2px solid #000;
+                    border-radius: 8px;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    display: inline-block;
+                }
+            </style>
             <button type="submit" class="btn btn-primary">次に進む</button>
         </form>
     </div>
