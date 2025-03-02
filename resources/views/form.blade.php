@@ -504,12 +504,21 @@
                 .preview-img {
                     max-width: 600px;
                     /* プレビュー画像を大きく */
-                    height: 600px;
+                    height: auto;
                     border: 2px solid #000;
                     border-radius: 8px;
                     margin-right: 10px;
                     margin-bottom: 10px;
                     display: inline-block;
+                }
+
+                /* カメラプレビュー用の video 要素 */
+                .camera-container video {
+                    width: 100%;
+                    max-width: 600px;
+                    /* カメラ映像の最大サイズを指定 */
+                    border: 2px solid #000;
+                    border-radius: 8px;
                 }
             </style>
             <button type="submit" class="btn btn-primary">次に進む</button>
