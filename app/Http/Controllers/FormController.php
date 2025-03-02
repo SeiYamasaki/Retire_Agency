@@ -67,18 +67,29 @@ class FormController extends Controller
         }
 
         // **ファイルを storage/public に保存**
-        $employmentContractPath = $request->file('employment_contract')->store('documents', 'public');
-        $idProofPath = $request->file('id_proof')->store('documents', 'public');
+        $employmentContractPaths = [];
+        if ($request->hasFile('employment_contract')) {
+            foreach ($request->file('employment_contract') as $file) {
+                $employmentContractPaths[] = $file->store('documents', 'public');
+            }
+        }
+
+        $idProofPaths = [];
+        if ($request->hasFile('id_proof')) {
+            foreach ($request->file('id_proof') as $file) {
+                $idProofPaths[] = $file->store('documents', 'public');
+            }
+        }
 
         // **アップロード失敗時**
-        if (!$employmentContractPath || !$idProofPath) {
+        if (empty($employmentContractPaths) || empty($idProofPaths)) {
             return redirect()->back()->withErrors(['file_upload' => 'ファイルのアップロードに失敗しました。']);
         }
 
         // **セッションにデータを保存**
         $formData = $request->except(['employment_contract', 'id_proof']);
-        $formData['employment_contract_path'] = $employmentContractPath;
-        $formData['id_proof_path'] = $idProofPath;
+        $formData['employment_contract_paths'] = $employmentContractPaths;
+        $formData['id_proof_paths'] = $idProofPaths;
 
         session(['form' => $formData]);
 
