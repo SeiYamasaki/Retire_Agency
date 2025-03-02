@@ -315,7 +315,9 @@
             <!-- 雇用契約書 -->
             <div class="mb-3">
                 <label for="employment_contract" class="form-label">
-                    あなたの雇用契約書または労働条件通知書（撮影可）※必須
+                    あなたの雇用契約書または労働条件通知書（撮影可）※必須 <br>
+                    【確認】Google Chrome や Edge で 設定 > プライバシーとセキュリティ > サイトの設定 > カメラ を開き、
+                    カメラのアクセスが許可されていないとカメラは起動しません
                 </label>
 
                 <!-- ファイル選択 (複数ファイル対応) -->
@@ -348,7 +350,9 @@
             <!-- 身分証明書 -->
             <div class="mb-3">
                 <label for="id_proof" class="form-label">
-                    あなたの身分証明書（撮影可）※必須
+                    あなたの身分証明書（撮影可）※必須 <br>
+                    【確認】Google Chrome や Edge で 設定 > プライバシーとセキュリティ > サイトの設定 > カメラ を開き、
+                    カメラのアクセスが許可されていないとカメラは起動しません
                 </label>
 
                 <!-- ファイル選択 (複数ファイル対応) -->
@@ -501,24 +505,53 @@
                 }
             </script>
             <style>
+                /* プレビュー画像のデザイン（スマホ対応） */
                 .preview-img {
-                    max-width: 600px;
-                    /* プレビュー画像を大きく */
+                    width: 100%;
+                    /* 画面の幅にフィットさせる */
+                    max-width: 400px;
+                    /* はみ出さないように調整 */
                     height: auto;
                     border: 2px solid #000;
                     border-radius: 8px;
                     margin-right: 10px;
                     margin-bottom: 10px;
-                    display: inline-block;
+                    display: block;
+                    /* 横並びを防ぎ、縦に並べる */
+                }
+
+                /* プレビュー画像を追加するコンテナ */
+                .preview-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    /* スマホでも中央配置 */
+                    gap: 10px;
                 }
 
                 /* カメラプレビュー用の video 要素 */
                 .camera-container video {
                     width: 100%;
-                    max-width: 600px;
-                    /* カメラ映像の最大サイズを指定 */
+                    /* 画面幅にフィット */
+                    max-width: 100%;
+                    /* はみ出さないように制限 */
                     border: 2px solid #000;
                     border-radius: 8px;
+                }
+
+                /* スマホ向けのスタイル */
+                @media (max-width: 768px) {
+                    .preview-img {
+                        max-width: 90%;
+                        /* スマホの画面に合わせる */
+                        margin: 10px auto;
+                        /* 画像を中央配置 */
+                    }
+
+                    .camera-container video {
+                        max-width: 100%;
+                        /* スマホの横幅いっぱいに */
+                    }
                 }
             </style>
             <button type="submit" class="btn btn-primary">次に進む</button>
