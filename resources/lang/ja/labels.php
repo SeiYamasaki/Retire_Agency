@@ -3,7 +3,7 @@
 return [
     //判定情報
     'token' => 'トークン',
-    'conflict' => '競業禁止契約の有無',
+    'conflict' => '現在勤務先とトラブルがあるかどうか',
     'public_servant' => '公務員かどうか',
     'licensed_professional' => '有資格者かどうか',
     'contractor' => '契約社員かどうか',
@@ -49,6 +49,6 @@ return [
     'resignation_contact' => '退職を伝えるべき勤務先の人の名前',
 
     // ファイルアップロード
-    'employment_contract' => 'あなたの雇用契約書または労働条件通知書',
-    'id_proof' => 'あなたの身分証明書',
+    'employment_contract_path' => 'あなたの雇用契約書または労働条件通知書',
+    'id_proof_path' => 'あなたの身分証明書',
 ];
