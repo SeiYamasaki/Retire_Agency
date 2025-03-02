@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Dompdf\Dompdf;
-use Dompdf\Options;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
 
 class ConfirmationController extends Controller
 {
+    /**
+     * 確認画面の表示
+     */
     public function show(Request $request)
     {
-        // 各フォームのデータをセッションに保存
+        // 各フォームのデータを取得し、セッションに保存
         session([
-            'judgment' => $request->only([
+            'judgment' => array_filter($request->only([
                 'conflict',
                 'public_servant',
                 'licensed_professional',
@@ -22,8 +22,9 @@ class ConfirmationController extends Controller
                 'foreign_trainee',
                 'mental_illness',
                 'trouble'
-            ]),
-            'form' => $request->only([
+            ])),
+
+            'form' => array_filter($request->only([
                 'name',
                 'name_furigana',
                 'gender',
@@ -54,14 +55,17 @@ class ConfirmationController extends Controller
                 'account_type',
                 'account_number',
                 'resignation_contact'
-            ]),
-            'consent' => $request->only(['consent'])
+            ])),
+
+            'consent' => array_filter($request->only(['consent']))
         ]);
 
-        return view('confirmation', [
-            'judgment' => session('judgment'),
-            'form' => session('form'),
-            'consent' => session('consent')
-        ]);
+        // セッションデータを取得（デフォルト値は空配列）
+        $judgment = session('judgment', []);
+        $form = session('form', []);
+        $consent = session('consent', []);
+
+        // 確認画面のビューを表示
+        return view('confirmation', compact('judgment', 'form', 'consent'));
     }
 }
