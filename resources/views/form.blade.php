@@ -316,10 +316,12 @@
                 <label for="employment_contract" class="form-label">
                     あなたの雇用契約書または労働条件通知書（撮影可）※必須
                 </label>
-
+                
+                <!-- ファイル選択 (複数ファイル対応) -->
                 <input type="file" class="form-control file-input" id="employment_contract"
-                    name="employment_contract" accept="image/*"
+                    name="employment_contract[]" accept="image/*" multiple
                     onchange="previewFile(event, 'preview_employment_contract', 'file_name_employment_contract', 'reset_employment_contract')">
+
 
                 <!-- カメラを起動するボタン -->
                 <button type="button" class="btn btn-secondary mt-2" id="start_employment_contract"
@@ -351,9 +353,10 @@
                     あなたの身分証明書（撮影可）※必須
                 </label>
 
-                <!-- ファイル選択 -->
-                <input type="file" class="form-control file-input" id="id_proof" name="id_proof" accept="image/*"
-                    onchange="previewFile(event, 'preview_id_proof', 'file_name_id_proof', 'reset_id_proof')">
+                <!-- ファイル選択 (複数ファイル対応) -->
+                <input type="file" class="form-control file-input" id="id_proof" name="id_proof[]" accept="image/*"
+                    multiple onchange="previewFile(event, 'preview_id_proof', 'file_name_id_proof', 'reset_id_proof')">
+
 
                 <!-- カメラを起動するボタン -->
                 <button type="button" class="btn btn-secondary mt-2" id="start_id_proof"
