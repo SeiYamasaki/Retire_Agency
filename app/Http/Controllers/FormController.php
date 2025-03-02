@@ -54,8 +54,8 @@ class FormController extends Controller
             'bank_name' => 'required|string|max:255',
             'account_type' => 'required|string|in:普通口座,当座口座,貯蓄口座',
             'account_number' => 'required|string|digits_between:7,20',
-            'employment_contract' => 'required|file|mimetypes:application/pdf,image/png,image/jpeg|max:2048',
-            'id_proof' => 'required|file|mimetypes:application/pdf,image/png,image/jpeg|max:2048',
+            'employment_contract' => 'required|file|mimetypes:application/pdf,image/png,image/jpeg|max:5120',
+            'id_proof' => 'required|file|mimetypes:application/pdf,image/png,image/jpeg|max:5120',
         ]);
 
         // **バリデーションエラー時**
