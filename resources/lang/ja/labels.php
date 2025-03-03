@@ -49,6 +49,6 @@ return [
     'resignation_contact' => '退職を伝えるべき勤務先の人の名前',
 
     // ファイルアップロード
-    'employment_contract_path' => 'あなたの雇用契約書または労働条件通知書',
-    'id_proof_path' => 'あなたの身分証明書',
+    'employment_contract' => 'あなたの雇用契約書または労働条件通知書',
+    'id_proof' => 'あなたの身分証明書',
 ];
