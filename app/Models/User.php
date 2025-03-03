@@ -14,7 +14,7 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<string>
      */
     protected $fillable = [
         'name',
@@ -49,15 +49,14 @@ class User extends Authenticatable
         'bank_name',
         'account_type',
         'account_number',
-        'account_holder',
-        'employment_contract',
-        'id_proof',
+        'employment_contract', // JSON 型
+        'id_proof', // JSON 型
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<string>
      */
     protected $hidden = [
         'password',
@@ -68,17 +67,16 @@ class User extends Authenticatable
     /**
      * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'birth_date' => 'date',
-            'desired_resignation_date' => 'date',
-            'final_work_date' => 'date',
-            'age' => 'integer',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'birth_date' => 'date',
+        'desired_resignation_date' => 'date',
+        'final_work_date' => 'date',
+        'age' => 'integer',
+        'employment_contract' => 'array', // JSONを配列として扱う
+        'id_proof' => 'array', // JSONを配列として扱う
+    ];
 }

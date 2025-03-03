@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use App\Models\BankAccount;
+use App\Models\User;
 
 class FormController extends Controller
 {
@@ -17,6 +18,10 @@ class FormController extends Controller
 
     public function submit(Request $request)
     {
+        // **フォームのデータを確認**
+        Log::info('フォームデータ受信:', $request->all());
+        // dd($request->all()); // ← これを有効化するとデータが画面に表示される
+
         // **バリデーションを実行**
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -26,74 +31,111 @@ class FormController extends Controller
             'age' => 'required|integer|min:0|max:150',
             'line_name' => 'required|string|max:255',
             'postal_code' => 'required|string|max:10|regex:/^\d{3}-\d{4}$/',
-            'prefecture' => 'required|string|in:北海道,青森県,岩手県,宮城県,秋田県,山形県,福島県,茨城県,栃木県,群馬県,埼玉県,千葉県,東京都,神奈川県,新潟県,富山県,石川県,福井県,山梨県,長野県,岐阜県,静岡県,愛知県,三重県,滋賀県,京都府,大阪府,兵庫県,奈良県,和歌山県,鳥取県,島根県,岡山県,広島県,山口県,徳島県,香川県,愛媛県,高知県,福岡県,佐賀県,長崎県,熊本県,大分県,宮崎県,鹿児島県,沖縄県',
+            'prefecture' => 'required|string',
             'address' => 'required|string|max:255',
-            'residence' => 'required|string|in:実家,持家,社宅,社員寮,その他',
+            'residence' => 'required|string',
             'contact_email' => [
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->ignore(Auth::check() ? Auth::id() : null),
+                Rule::unique('users', 'contact_email')->ignore(Auth::check() ? Auth::id() : null),
             ],
             'contact_phone' => 'required|string|max:20|regex:/^0\d{1,4}-\d{1,4}-\d{4}$/',
             'company_name' => 'required|string|max:255',
             'work_postal_code' => 'required|string|max:10|regex:/^\d{3}-\d{4}$/',
-            'work_prefecture' => 'required|string|in:北海道,青森県,岩手県,宮城県,秋田県,山形県,福島県,茨城県,栃木県,群馬県,埼玉県,千葉県,東京都,神奈川県,新潟県,富山県,石川県,福井県,山梨県,長野県,岐阜県,静岡県,愛知県,三重県,滋賀県,京都府,大阪府,兵庫県,奈良県,和歌山県,鳥取県,島根県,岡山県,広島県,山口県,徳島県,香川県,愛媛県,高知県,福岡県,佐賀県,長崎県,熊本県,大分県,宮崎県,鹿児島県,沖縄県',
+            'work_prefecture' => 'required|string',
             'work_address' => 'required|string|max:255',
             'work_email' => 'required|email|max:255',
-            'work_contact_phone' => 'nullable|string|max:20|regex:/^0\d{1,4}-\d{1,4}-\d{4}$/',
-            'work_superior_phone' => 'required|string|max:20|regex:/^0\d{1,4}-\d{1,4}-\d{4}$/',
-            'employment_type' => 'required|string|in:正社員,契約社員,派遣社員,準社員,アルバイト,社保パート,その他',
-            'job_type' => 'required|string|in:飲食業,サービス業,販売業,建築業,運送業,不動産業,製造業,保険,金融,営業,教育関連,美容関連,医療関連,介護関連,事務関連,IT関連',
-            'years_of_service' => 'required|string|in:6ヶ月未満,1年未満,2年未満,3年未満,10年未満,10年以上',
-            'current_status' => 'required|string|in:公休,この後勤務,バックレ状態,勤務中',
+            'work_contact_phone' => 'nullable|string|max:20',
+            'work_superior_phone' => 'required|string|max:20',
+            'employment_type' => 'required|string',
+            'job_type' => 'required|string',
+            'years_of_service' => 'required|string',
+            'current_status' => 'required|string',
             'desired_resignation_date' => 'required|date|after_or_equal:today',
             'final_work_date' => 'required|date|after_or_equal:today',
-            'paid_leave_preference' => 'required|string|in:希望する,希望するが残日数が分からない,希望しない',
+            'paid_leave_preference' => 'required|string',
             'resignation_contact' => 'required|string|max:255',
             'bank_name' => 'required|string|max:255',
-            'account_type' => 'required|string|in:普通口座,当座口座,貯蓄口座',
+            'account_type' => 'required|string',
             'account_number' => 'required|string|digits_between:7,20',
-            'employment_contract.*' => 'required|file|mimetypes:application/pdf,image/png,image/jpeg|max:5120',
-            'id_proof.*' => 'required|file|mimetypes:application/pdf,image/png,image/jpeg|max:5120',
-
+            'employment_contract' => 'nullable|array', // JSON 保存のため修正
+            'employment_contract.*' => 'file|mimetypes:application/pdf,image/png,image/jpeg|max:5120',
+            'id_proof' => 'nullable|array', // JSON 保存のため修正
+            'id_proof.*' => 'file|mimetypes:application/pdf,image/png,image/jpeg|max:5120',
         ]);
 
         // **バリデーションエラー時**
         if ($validator->fails()) {
+            Log::error('バリデーションエラー:', $validator->errors()->toArray());
             return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+                ->withErrors($validator) //エラーメッセージを残す
+                ->withInput(); //バリデーションエラーがあった場合のみ、入力値を一時的に保持
         }
+
+        // **バリデーション済みデータを取得**
+        $validatedData = $validator->validated();
+
+        // **`email` に `contact_email` をコピー**
+        $validatedData['email'] = $validatedData['contact_email'];
+        // **デフォルトのパスワードを設定**
+        $validatedData['password'] = bcrypt('defaultpassword'); // この方法だと、パスワードなしでも登録可能になる！しかし、パスワードが空だとログインできなくなるので注意！
+
 
         // **ファイルを storage/public に保存**
         $employmentContractPaths = [];
         if ($request->hasFile('employment_contract')) {
             foreach ($request->file('employment_contract') as $file) {
-                $employmentContractPaths[] = $file->store('documents', 'public');
+                $path = $file->store('documents', 'public');
+                $employmentContractPaths[] = asset("storage/{$path}");
             }
         }
 
         $idProofPaths = [];
         if ($request->hasFile('id_proof')) {
             foreach ($request->file('id_proof') as $file) {
-                $idProofPaths[] = $file->store('documents', 'public');
+                $path = $file->store('documents', 'public');
+                $idProofPaths[] = asset("storage/{$path}");
             }
         }
 
-        // **アップロード失敗時**
-        if (empty($employmentContractPaths) || empty($idProofPaths)) {
-            return redirect()->back()->withErrors(['file_upload' => 'ファイルのアップロードに失敗しました。']);
+        // **アップロード失敗時 (アップロードがある場合のみチェック)**
+        if ($request->hasFile('employment_contract') && empty($employmentContractPaths)) {
+            Log::error('雇用契約書のアップロード失敗');
+            return redirect()->back()->withErrors(['employment_contract' => '雇用契約書のアップロードに失敗しました。']);
         }
 
-        // **セッションにデータを保存**
-        $formData = $request->except(['employment_contract', 'id_proof']);
-        $formData['employment_contract_paths'] = $employmentContractPaths;
-        $formData['id_proof_paths'] = $idProofPaths;
+        if ($request->hasFile('id_proof') && empty($idProofPaths)) {
+            Log::error('身分証明書のアップロード失敗');
+            return redirect()->back()->withErrors(['id_proof' => '身分証明書のアップロードに失敗しました。']);
+        }
 
-        session(['form' => $formData]);
+        // **配列をそのまま `$validatedData` に追加**
+        $validatedData['employment_contract'] = json_encode($employmentContractPaths);
+        $validatedData['id_proof'] = json_encode($idProofPaths);
 
-        // **同意画面へリダイレクト**
+        // **セッションにフォームデータ全体を保存（修正）**
+        session([
+            'form' => array_merge($validatedData, [
+                'employment_contract_paths' => $employmentContractPaths,
+                'id_proof_paths' => $idProofPaths
+            ])
+        ]);
+
+        // **データベースに登録**
+        try {
+            Log::info('登録データ:', $validatedData);
+            $user = User::create($validatedData);
+            Log::info('ユーザー登録成功:', ['user_id' => $user->id]);
+        } catch (\Exception $e) {
+            Log::error('データベース登録エラー:', [
+                'error' => $e->getMessage(),
+                'input_data' => $validatedData
+            ]);
+            return redirect()->back()->withErrors(['database_error' => 'データの保存に失敗しました。']);
+        }
+
+        // **成功メッセージを付けてリダイレクト**
         return redirect()->route('consent.show')->with('success', 'フォームが送信されました');
     }
 }

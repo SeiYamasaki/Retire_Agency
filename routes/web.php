@@ -8,8 +8,6 @@ use App\Http\Controllers\ConsentController;
 use App\Http\Controllers\ConfirmationController;
 use App\Http\Controllers\RetirementController;
 
-Route::get('/', [JudgmentController::class, 'show']);
-
 // 判定フォーム
 Route::get('/judgment', [JudgmentController::class, 'show'])->name('judgment.show');
 Route::post('/judgment', [JudgmentController::class, 'submit'])->name('judgment.submit');

@@ -8,49 +8,48 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('name_furigana');
-            $table->string('gender');
-            $table->date('birth_date');
-            $table->integer('age')->nullable();
-            $table->string('line_name');
-            $table->string('postal_code', 10);
-            $table->string('prefecture');
-            $table->string('address');
-            $table->string('residence');
-            $table->string('contact_email')->unique(); // ユーザーのメールアドレス (重複禁止)
-            $table->string('contact_phone');
+        Schema::create('users', function (Blueprint $table) { //->nullable();は空でも可能
+            $table->id(); // 主キー (自動設定)
+            $table->string('name'); // 必須
+            $table->string('name_furigana'); // 必須
+            $table->string('gender'); // 必須
+            $table->date('birth_date'); // 必須
+            $table->integer('age'); // 必須      
+            $table->string('line_name'); // 必須
+            $table->string('postal_code', 10); // 必須 (重複を許可)
+            $table->string('prefecture'); // 必須
+            $table->string('address'); // 必須 (重複を許可)
+            $table->string('residence'); // 必須
+            $table->string('contact_email')->unique(); // 必須かつ重複禁止
+            $table->string('contact_phone')->unique(); // 必須かつ重複禁止
 
             // 勤務先情報
-            $table->string('company_name')->nullable();
-            $table->string('work_postal_code', 10)->nullable();
-            $table->string('work_prefecture')->nullable();
-            $table->string('work_address')->nullable();
-            $table->string('work_email')->nullable();
-            $table->string('work_contact_phone')->nullable();
-            $table->string('work_superior_phone'); // 上司の携帯電話 (必須)
+            $table->string('company_name'); // 必須
+            $table->string('work_postal_code', 10); // 必須 (重複を許可)
+            $table->string('work_prefecture'); // 必須
+            $table->string('work_address'); // 必須 (重複を許可)
+            $table->string('work_email')->unique(); // 必須かつ重複禁止
+            $table->string('work_contact_phone')->nullable(); // 空でも良い
+            $table->string('work_superior_phone')->unique(); // 必須かつ上司の携帯電話重複禁止
 
             // 雇用情報
-            $table->string('employment_type');
-            $table->string('job_type');
-            $table->string('years_of_service');
-            $table->string('current_status');
-            $table->date('desired_resignation_date');
-            $table->date('final_work_date');
-            $table->string('paid_leave_preference');
-            $table->string('resignation_contact')->nullable();
+            $table->string('employment_type'); // 必須
+            $table->string('job_type'); // 必須
+            $table->string('years_of_service'); // 必須
+            $table->string('current_status'); // 必須
+            $table->date('desired_resignation_date'); // 必須
+            $table->date('final_work_date'); // 必須
+            $table->string('paid_leave_preference'); // 必須
+            $table->string('resignation_contact'); // 必須 (重複を許可)
 
             // 銀行口座情報
-            $table->string('bank_name');
-            $table->string('account_type'); // 普通口座 / 当座口座 / 貯蓄口座
-            $table->string('account_number', 20)->index(); // 一意ではなく索引を追加
-            $table->string('account_holder');
+            $table->string('bank_name'); // 必須
+            $table->string('account_type'); // 必須
+            $table->string('account_number', 20)->index(); // 必須かつ索引 (検索速度向上)
 
             // 書類アップロード
-            $table->string('employment_contract'); // 雇用契約書のパス
-            $table->string('id_proof'); // 身分証明書のパス
+            $table->json('employment_contract'); // 必須 (JSON カラム)
+            $table->json('id_proof'); // 必須 (JSON カラム)
 
             // 認証情報
             $table->string('email')->unique(); // ユーザー認証用メール (重複禁止)
