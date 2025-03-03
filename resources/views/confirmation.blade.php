@@ -66,13 +66,15 @@
             <p>{{ session('form.resignation_contact', '担当者未入力') }}様</p>
             <br>
             <h4 class="text-center">退 職 届</h4>
-            <p class="text-right">{{ session('form.prefecture', '都道府県未入力') }}</p>
-            <p class="text-right">{{ session('form.address', '住所未入力') }}</p>
-            <p class="text-right">{{ session('form.name', '氏名未入力') }}</p>
+            <p class="text-right" style="text-align: right;">{{ session('form.prefecture', '都道府県未入力') }}</p>
+            <p class="text-right" style="text-align: right;">{{ session('form.address', '住所未入力') }}</p>
+            <p class="text-right" style="text-align: right;">{{ session('form.name', '氏名未入力') }}</p>
+
             <br>
 
             <p>前略</p>
-            <p>私、{{ session('form.name') }}は一身上の都合により、{{ session('form.desired_resignation_date', '退職日未入力') }}をもちまして退職いたしたく、ここに届出いたします｡</p>
+            <p>私、{{ session('form.name') }}は一身上の都合により、{{ session('form.desired_resignation_date', '退職日未入力') }}をもちまして退職いたしたく、ここに届出いたします｡
+            </p>
             <p>なお､「離職票」及び「給与所得者の源泉徴収票」並びに「社会保険資格喪失証明書」のご依頼をいたしますので､上記住所宛てにお手配のほどよろしくお願いいたします｡</p>
             <p>併せて､給与のお振込先は以下の通りですのでお振込の程よろしくお願い申し上げます｡</p>
             <p>在職中は格別のご厚情を賜り、誠にありがとうございました。</p>
@@ -83,8 +85,7 @@
             <p class="text-center font-weight-bold">{{ session('form.bank_name', '銀行名未入力') }}</p>
             <p class="text-center font-weight-bold">{{ session('form.account_type', '口座種別未入力') }}</p>
             <p class="text-center font-weight-bold">{{ session('form.account_number', '口座番号未入力') }}</p>
-            <p class="text-center font-weight-bold">{{ session('form.account_holder', '口座名義未入力') }}</p>
-
+            
             <p class="text-right font-weight-bold">以上</p>
         </div>
 
@@ -99,5 +100,4 @@
             <button type="submit" class="btn btn-primary">送信</button>
         </div>
     </form>
-
 @endsection
