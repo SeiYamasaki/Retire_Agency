@@ -21,13 +21,26 @@
         <div class="table-responsive">
             <table class="table table-bordered">
                 @foreach (session('form', []) as $key => $value)
-                    <tr>
-                        <th>{{ __('labels.' . $key) }}</th>
-                        <td>{{ is_array($value) ? implode(', ', $value) : $value }}</td>
-                    </tr>
+                    @php
+                        // 非表示にする項目リスト
+                        $hiddenKeys = ['email', 'password', 'employment_contract_paths', 'id_proof_paths'];
+
+                        // ファイルパスをファイル名のみに変更
+                        if (in_array($key, ['employment_contract', 'id_proof'])) {
+                            $value = basename($value);
+                        }
+                    @endphp
+
+                    @if (!in_array($key, $hiddenKeys))
+                        <tr>
+                            <th>{{ __('labels.' . $key) }}</th>
+                            <td>{{ is_array($value) ? implode(', ', $value) : $value }}</td>
+                        </tr>
+                    @endif
                 @endforeach
             </table>
         </div>
+
 
         <h3 class="text-warning">同意フォーム</h3>
         <p>個人情報取扱いの同意及び合意:
